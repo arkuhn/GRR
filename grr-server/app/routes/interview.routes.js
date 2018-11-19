@@ -9,7 +9,7 @@ module.exports = function(app) {
     // Delete an interview
     app.delete('/api/interviews/', interviews.delete);
 
-    // Retrieve all interviews
+    // Retrieve all interviews for a given host
     app.get('/api/interviews/:host', interviews.findAll);
 
     // Retrieve a single interview with interviewId
