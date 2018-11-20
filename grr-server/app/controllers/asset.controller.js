@@ -19,10 +19,10 @@ exports.create = function(req, res) {
         if({ email, name}) {
 
             var asset = new Asset({
-                name: "Test",
-                uploadedOnDate: "11/19/18",
-                owner: "Test_Person",
-                type: "Image"
+                name: req.body.data.name,
+                uploadedOnDate: req.body.data.uploadedOnDate,
+                owner: email,
+                type: req.body.data.type
                 
             });
             asset.save(function(err, data) {
