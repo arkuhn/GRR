@@ -13,6 +13,43 @@ function userIsHost(id, email) {
     return true;
 }
 
+function leavingInterview(id, email, newData) {
+    console.log("Checking if leaving Interview:")
+    Interview.findOne({'_id': id}, function(err, interview) {
+        console.log(email)
+        let reconstructedInterview = newData;
+        reconstructedInterview.participants.push(email);
+        return isEquivalent(interview, reconstructedInterview);
+    })
+    return false;
+}
+
+
+function isEquivalent(a, b) {
+    // Create arrays of property names
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+
+    // If number of properties is different,
+    // objects are not equivalent
+    if (aProps.length != bProps.length) {
+        return false;
+    }
+
+    for (var i = 0; i < aProps.length; i++) {
+        var propName = aProps[i];
+
+        // If values of same property are not equal,
+        // objects are not equivalent
+        if (a[propName] !== b[propName]) {
+            return false;
+        }
+    }
+
+    // If we made it this far, objects
+    // are considered equivalent
+    return true;
+}
 
 exports.create = function(req, res) {
     firebase.authenticateToken(req.headers.authorization).then(({ email, name}) => {
@@ -70,7 +107,11 @@ exports.delete = function(req, res) {
 exports.update = function(req, res) {
     firebase.authenticateToken(req.headers.authorization).then(({ email, name}) => {
         if({ email, name}) {
-            if(userIsHost(req.body.data.id)) {
+            //if(userIsHost(req.body.data.id) || leavingInterview(req.body.data.id, email, req.body.data)) {
+                //if(leavingInterview(req.body.data.id, email, req.body.data)) {
+                //    email = req.body.data.host;
+                //}
+                console.log(req.body);
                 let participants = (req.body.data.participants).split(',')
                 if (participants.length === 1 && participants[0] === '') {
                     participants = []
@@ -95,9 +136,9 @@ exports.update = function(req, res) {
                         res.send(interview);
                     }
                 })
-            } else {
-                res.status(403).send('Forbidden: Invalid Host Email');
-            }
+            //} else {
+            //    res.status(403).send('Forbidden: Invalid Host Email');
+            //}
         }
     })
 };
@@ -137,4 +178,33 @@ exports.findAll = function(req, res) {
             });
         }
     })
+};
+
+
+exports.patchParticipants = function(req, res) {
+    firebase.authenticateToken(req.headers.authorization).then(({email, name}) => {
+        if({ email, name}) {
+            Interview.findOne({'_id': req.params.id}, function(err, interview) {
+                if(err) {
+                    console.log(err);
+                    if(err.kind === 'ObjectId') {
+                        return res.status(404).send({message: "Interview not found with id " + req.params.id});
+                    }
+                    return res.status(500).send({message: "Error retrieving interview with id " + req.params.id});
+                }
+                else {
+                    interview.participants = interview.participants.filter(part => part != email);
+                    Interview.findByIdAndUpdate({'_id': req.params.id}, interview, function(err, interview){
+                        if(err) {
+                            console.log(err);
+                            res.status(500).send({message: "Some error occurred while updating the Interview."});
+                        } else {
+                            console.log('Interview updated')
+                            res.send(interview);
+                        }
+                    });
+                }
+            });
+        }
+    });
 };

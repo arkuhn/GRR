@@ -5,6 +5,7 @@ import { Button, Header, Card, Grid, Modal, List, Input, Image, Divider } from '
 import InterviewAPI from '../../utils/InterviewAPI';
 import InterviewForm from './InterviewForm';
 import CancelInterview from './cancelInterview'
+import LeaveInterview from './leaveInterview'
 import _ from 'lodash';
 import {firebaseAuth} from "../../utils/firebase";
 
@@ -84,7 +85,7 @@ class InterviewCard extends Component {
                                 Join
                             </Button>
 
-                            <CancelInterview id={this.props.id} />
+                            <LeaveInterview id={this.props.id} />
                         </div>
                     </Card.Content>
                 </Card.Content>

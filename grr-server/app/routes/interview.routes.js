@@ -18,4 +18,7 @@ module.exports = function(app) {
     // Update a interview with interviewId
     app.put('/api/interviews/', interviews.update);
 
+    // Patch an interview's participants list by removing the current user's email
+    app.patch('/api/interviews/:id', interviews.patchParticipants);
+
 }
