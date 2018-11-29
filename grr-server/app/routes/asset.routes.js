@@ -9,10 +9,10 @@ module.exports = function(app) {
     // Delete an asset
     app.delete('/api/assets/', assets.delete);
 
-    // Retrieve all assets
+    // Retrieve all assets for a given host
     app.get('/api/assets/:host', assets.findAll);
 
-    // Retrieve a single asset with assetId
+    // Retrieve a single asset based on assetId
     app.get('/api/asset/:id', assets.findOne);
 
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {API_URL} from "../templates/api.config";
-import { firebaseAuth } from './firebase'
+import { firebaseAuth } from './firebase';
 var _ = require("lodash");
     
 
