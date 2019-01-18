@@ -25,6 +25,7 @@
     "react-dom": "^16.1.1",
     "react-filepond": "^5.0.0",
     "request": "^2.83.0",
+    "shortid": "^2.2.14",
     "socket.io": "^2.0.4",
     "underscore": "1.5.x"
   },

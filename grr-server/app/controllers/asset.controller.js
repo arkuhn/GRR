@@ -1,5 +1,8 @@
 var Asset = require('../models/asset.model.js');
-var  firebase  = require('../../firebase')
+var firebase  = require('../../firebase')
+var shortid = require('shortid');
+var mkdirp = require('mkdirp');
+var fs = require('fs');
 
 function userIsOwner(id, email) {
     Asset.findOne({'_id': id}, function(err, asset) {
@@ -18,13 +21,17 @@ exports.create = function(req, res) {
     firebase.authenticateToken(req.headers.authorization).then(({ email, name}) => {
         if({ email, name}) {
 
-            var asset = new Asset({
-                name: req.body.data.name,
-                uploadedOnDate: req.body.data.uploadedOnDate,
-                owner: email,
-                type: req.body.data.type
+            // Iterate over each file in the request
+            for(file in req.files) {
+                var asset = new Asset({
+                    name: file.filename,
+                    uploadedOnDate: new Date().toLocaleDateString("en-US"),
+                    owner: email,
+                    type: file.mimetype
+                    
+                });
+            }
                 
-            });
             asset.save(function(err, data) {
                 if(err) {
                     console.log(err);

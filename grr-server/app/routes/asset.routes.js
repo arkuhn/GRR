@@ -15,4 +15,7 @@ module.exports = function(app) {
     // Retrieve a single asset based on assetId
     app.get('/api/asset/:id', assets.findOne);
 
+    // FilePond route for uploading assets
+    app.post('/api/assets/process', assets.create);
+
 }
